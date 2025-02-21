@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIONEGA BASIC EHR DEMO</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center;">DIONEGA BASIC EHR DEMO</h1>
+        <p id="datetime" style="text-align: center;"></p>
+    </header>
+    
+    <section id="login" style="text-align: center;">
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+    </section>
+    
+    <section id="welcome" style="text-align: center; display: none;">
+        <h2>WELCOME TO DIONEGA ELECTRONIC HEALTH RECORDS DEMO!</h2>
+        <p class="motto"><em>Empowering Healthcare with Modern Technology</em></p>
+    </section>
+    
+    <section id="adminPanel" style="text-align: center; display: none;">
+        <h2>Admin Panel - Manage Users</h2>
+        <form id="addUserForm">
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" required>
+            <br>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" required>
+            <br>
+            <button type="submit">Add User</button>
+        </form>
+        <h3>Registered Users:</h3>
+        <ul id="userList"></ul>
+    </section>
+    
+    <section id="patientInfo" style="text-align: center; display: none;">
+        <h2>Encode Patient Information</h2>
+        <form id="patientForm">
+            <label for="patientImage">Upload Patient Image:</label>
+            <input type="file" id="patientImage" accept="image/*">
+            <br>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" required>
+            <br>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" required>
+            <br>
+            <label for="middleName">Middle Name:</label>
+            <input type="text" id="middleName">
+            <br>
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" id="birthdate" required>
+            <br>
+            <label for="age">Age:</label>
+            <input type="text" id="age" readonly>
+            <br>
+            <button type="submit">Save Patient</button>
+        </form>
+    </section>
+    
+    <nav id="navigation" style="text-align: center; display: none;">
+        <ul>
+            <li><a href="#" id="encodePatient">Encode Patient Info</a></li>
+            <li><a href="view.html">View Patients</a></li>
+            <li><a href="#" id="adminPanelLink" style="display: none;">Admin Panel</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+    </nav>
+    
+    <footer style="text-align: center;">
+        <p>ALL RIGHTS RESERVED 2025 | GROUP 2 DIONEGA - NURSING INFORMATICS</p>
+    </footer>
+    
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString();
+            const formattedTime = now.toLocaleTimeString();
+            document.getElementById('datetime').innerText = `Current Date and Time: ${formattedDate} ${formattedTime}`;
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        document.getElementById('birthdate').addEventListener('change', function() {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            document.getElementById('age').value = age;
+        });
+
+        const adminCredentials = { username: 'Admin2005', password: '239210183' };
+        const users = [adminCredentials];
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(user => user.username === username && user.password === password);
+            if (user) {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('welcome').style.display = 'block';
+                document.getElementById('navigation').style.display = 'block';
+                if (username === adminCredentials.username) {
+                    document.getElementById('adminPanelLink').style.display = 'inline';
+                }
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', function() {
+            location.reload();
+        });
+
+        document.getElementById('encodePatient').addEventListener('click', function() {
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('patientInfo').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
